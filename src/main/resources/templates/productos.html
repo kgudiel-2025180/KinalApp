@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KinalApp - Gestión de Productos</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f8fafc;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary) 0%, #1a252f 100%);
+            min-height: 100vh;
+            position: fixed;
+            width: 260px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar .logo {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar .logo h4 {
+            color: white;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .sidebar .logo i {
+            color: var(--accent);
+            margin-right: 10px;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.7);
+            padding: 14px 20px;
+            margin: 5px 10px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .sidebar .nav-link:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+
+        .sidebar .nav-link.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 10px rgba(52,152,219,0.3);
+        }
+
+        .sidebar .nav-link i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar .nav-section {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 20px 20px 10px;
+        }
+
+        .sidebar .user-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            color: white;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .navbar-top {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-top h5 {
+            margin: 0;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .content-area {
+            padding: 30px;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .badge-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        .badge-stock {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, var(--accent), #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52,152,219,0.3);
+            color: white;
+        }
+
+        .stat-badge {
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 500;
+        }
+
+        .filter-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .modal-header {
+            border-radius: 15px 15px 0 0;
+        }
+
+        .alert {
+            border-radius: 10px;
+        }
+
+        .price-tag {
+            font-weight: 700;
+            color: var(--success);
+        }
+    </style>
+</head>
+<body>
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="logo">
+        <h4><i class="bi bi-shop"></i> KinalApp</h4>
+        <small class="text-white-50">Sistema de Gestión</small>
+    </div>
+
+    <div class="nav-section">MENÚ PRINCIPAL</div>
+
+    <nav class="nav flex-column">
+        <a class="nav-link" th:href="@{/web/dashboard}">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </a>
+        <a class="nav-link" th:href="@{/web/ventas}">
+            <i class="bi bi-cart-check"></i> Ventas
+        </a>
+        <a class="nav-link" th:href="@{/web/clientes}">
+            <i class="bi bi-people"></i> Clientes
+        </a>
+        <a class="nav-link active" th:href="@{/web/productos}">
+            <i class="bi bi-box-seam"></i> Productos
+        </a>
+    </nav>
+
+    <div class="nav-section">ACCIONES RÁPIDAS</div>
+
+    <nav class="nav flex-column">
+        <a class="nav-link" th:href="@{/web/ventas/nueva}">
+            <i class="bi bi-plus-circle"></i> Nueva Venta
+        </a>
+        <a class="nav-link" th:href="@{/web/clientes/nuevo}">
+            <i class="bi bi-person-plus"></i> Nuevo Cliente
+        </a>
+        <a class="nav-link" th:href="@{/web/productos/nuevo}">
+            <i class="bi bi-box"></i> Nuevo Producto
+        </a>
+    </nav>
+
+    <div class="user-info">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-person-circle"></i>
+            <div>
+                <div class="fw-bold" th:text="${session.usuarioNombre}">Administrador</div>
+                <small class="text-white-50" th:text="${session.usuarioRol}">Admin</small>
+            </div>
+        </div>
+        <a th:href="@{/logout}" class="btn btn-sm btn-outline-light w-100 mt-3">
+            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+        </a>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="navbar-top">
+        <div>
+            <h5>Gestión de Productos</h5>
+            <nav class="breadcrumb">
+                <span class="breadcrumb-item"><a th:href="@{/web/dashboard}" class="text-decoration-none">Inicio</a></span>
+                <span class="breadcrumb-item active">Productos</span>
+            </nav>
+        </div>
+        <div class="d-flex gap-2">
+                <span class="badge bg-success stat-badge">
+                    <i class="bi bi-box-seam"></i> Total: <span th:text="${#lists.size(productos)}">0</span>
+                </span>
+            <a th:href="@{/web/productos/nuevo}" class="btn btn-gradient">
+                <i class="bi bi-plus-lg"></i> Nuevo Producto
+            </a>
+        </div>
+    </div>
+
+    <div class="content-area">
+        <!-- Mensajes Flash -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filter-card">
+            <form th:action="@{/web/productos/buscar}" method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">
+                        <i class="bi bi-search"></i> Buscar Producto
+                    </label>
+                    <input type="text" name="nombre" class="form-control" placeholder="Nombre del producto...">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">
+                        <i class="bi bi-flag"></i> Estado
+                    </label>
+                    <select name="estado" class="form-select">
+                        <option value="">Todos</option>
+                        <option value="1">Activo</option>
+                        <option value="0">Inactivo</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">
+                        <i class="bi bi-box"></i> Stock
+                    </label>
+                    <select name="stock" class="form-select">
+                        <option value="">Todos</option>
+                        <option value="low">Stock Bajo (≤ 10)</option>
+                        <option value="available">Con Stock (> 0)</option>
+                        <option value="out">Sin Stock (0)</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-funnel"></i> Filtrar
+                    </button>
+                    <a th:href="@{/web/productos}" class="btn btn-outline-secondary w-100 mt-2">
+                        <i class="bi bi-arrow-counterclockwise"></i> Limpiar
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tabla de Productos -->
+        <div class="table-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0">
+                    <i class="bi bi-grid-3x3-gap me-2"></i>
+                    Catálogo de Productos
+                </h6>
+                <span class="text-muted" th:if="${totalProductos != null}">
+                        <span th:text="${totalProductos}"></span> productos registrados
+                    </span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Producto</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(productos)}">
+                        <td colspan="7" class="text-center py-5">
+                            <i class="bi bi-box fs-1 text-muted"></i>
+                            <p class="text-muted mt-2 mb-3">No hay productos registrados</p>
+                            <a th:href="@{/web/productos/nuevo}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> Registrar primer producto
+                            </a>
+                        </td>
+                    </tr>
+
+                    <tr th:each="producto : ${productos}" th:if="${not #lists.isEmpty(productos)}">
+                        <td>
+                            <code>#PROD-<span th:text="${producto.idProducto}">001</span></code>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-success bg-opacity-10 rounded-circle p-2 me-2">
+                                    <i class="bi bi-box text-success"></i>
+                                </div>
+                                <span th:text="${producto.nombreProducto}">Laptop Dell</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span th:text="${producto.descripcion ?: 'Sin descripción'}">Laptop de 15 pulgadas</span>
+                        </td>
+                        <td>
+                            <span class="price-tag" th:text="'Q ' + ${#numbers.formatDecimal(producto.precio, 1, 2)}">Q 4,500.00</span>
+                        </td>
+                        <td>
+                                    <span th:if="${producto.stock > 10}" class="badge-stock bg-success bg-opacity-10 text-success">
+                                        <i class="bi bi-check-circle"></i> <span th:text="${producto.stock}">50</span> unidades
+                                    </span>
+                            <span th:if="${producto.stock > 0 and producto.stock <= 10}" class="badge-stock bg-warning bg-opacity-10 text-warning">
+                                        <i class="bi bi-exclamation-triangle"></i> <span th:text="${producto.stock}">5</span> unidades
+                                    </span>
+                            <span th:if="${producto.stock == 0}" class="badge-stock bg-danger bg-opacity-10 text-danger">
+                                        <i class="bi bi-x-circle"></i> Agotado
+                                    </span>
+                        </td>
+                        <td>
+                                    <span th:if="${producto.estado == 1}" class="badge-status bg-success bg-opacity-10 text-success">
+                                        <i class="bi bi-check-circle"></i> Activo
+                                    </span>
+                            <span th:if="${producto.estado != 1}" class="badge-status bg-danger bg-opacity-10 text-danger">
+                                        <i class="bi bi-x-circle"></i> Inactivo
+                                    </span>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a th:href="@{/web/productos/editar/{id}(id=${producto.idProducto})}"
+                                   class="btn btn-sm btn-outline-warning"
+                                   title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button class="btn btn-sm btn-outline-danger"
+                                        title="Eliminar"
+                                        onclick="confirmarEliminacion([[${producto.idProducto}]], '[[${producto.nombreProducto}]]')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Resumen -->
+            <div class="border-top pt-3 mt-3" th:if="${not #lists.isEmpty(productos)}">
+                <div class="row">
+                    <div class="col-md-4">
+                        <small class="text-muted">Total productos: <strong th:text="${#lists.size(productos)}"></strong></small>
+                    </div>
+                    <div class="col-md-4">
+                        <small class="text-muted">
+                            Valor del inventario:
+                            <strong class="text-success">
+                                Q <span th:text="${#numbers.formatDecimal(#aggregates.sum(productos.![precio * stock]), 1, 2)}">0.00</span>
+                            </strong>
+                        </small>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <small class="text-muted">
+                            <i class="bi bi-box"></i> Productos activos:
+                            <strong th:text="${#lists.size(productos.?[estado == 1])}"></strong>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmación para Eliminar -->
+<div class="modal fade" id="modalEliminar" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-exclamation-triangle"></i> Confirmar Eliminación
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro que deseas eliminar este producto?</p>
+                <p class="text-muted">
+                    <strong>ID:</strong> #PROD-<span id="productoIdEliminar"></span><br>
+                    <strong>Producto:</strong> <span id="productoNombreEliminar"></span>
+                </p>
+                <p class="text-danger small">
+                    <i class="bi bi-exclamation-circle"></i> Esta acción no se puede deshacer.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </button>
+                <a href="#" id="btnConfirmarEliminar" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Eliminar Producto
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function confirmarEliminacion(id, nombre) {
+        document.getElementById('productoIdEliminar').textContent = id;
+        document.getElementById('productoNombreEliminar').textContent = nombre || 'Producto no especificado';
+        document.getElementById('btnConfirmarEliminar').href = '/web/productos/eliminar/' + id;
+
+        const modal = new bootstrap.Modal(document.getElementById('modalEliminar'));
+        modal.show();
+    }
+
+    setTimeout(function() {
+        document.querySelectorAll('.alert').forEach(function(alert) {
+            new bootstrap.Alert(alert).close();
+        });
+    }, 5000);
+</script>
+</body>
+</html>
