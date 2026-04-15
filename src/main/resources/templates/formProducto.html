@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo} ?: 'Nuevo Producto' + ' - KinalApp'">KinalApp - Nuevo Producto</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --success: #27ae60;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f8fafc;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary) 0%, #1a252f 100%);
+            min-height: 100vh;
+            position: fixed;
+            width: 260px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar .logo {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar .logo h4 {
+            color: white;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .sidebar .logo i {
+            color: var(--accent);
+            margin-right: 10px;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.7);
+            padding: 14px 20px;
+            margin: 5px 10px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .sidebar .nav-link:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+
+        .sidebar .nav-link.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 10px rgba(52,152,219,0.3);
+        }
+
+        .sidebar .nav-link i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar .nav-section {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 20px 20px 10px;
+        }
+
+        .sidebar .user-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            color: white;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .navbar-top {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-top h5 {
+            margin: 0;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .content-area {
+            padding: 30px;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-card h6 {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
+        }
+
+        .input-group-text {
+            background: transparent;
+            border-right: none;
+            border-radius: 10px 0 0 10px;
+            color: #7f8c8d;
+        }
+
+        .input-group .form-control {
+            border-left: none;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .btn-success-gradient {
+            background: linear-gradient(135deg, var(--success), #1e8449);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-success-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39,174,96,0.3);
+            color: white;
+        }
+
+        .alert {
+            border-radius: 10px;
+        }
+
+        .preview-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="logo">
+        <h4><i class="bi bi-shop"></i> KinalApp</h4>
+        <small class="text-white-50">Sistema de Gestión</small>
+    </div>
+
+    <div class="nav-section">MENÚ PRINCIPAL</div>
+
+    <nav class="nav flex-column">
+        <a class="nav-link" th:href="@{/web/dashboard}">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </a>
+        <a class="nav-link" th:href="@{/web/ventas}">
+            <i class="bi bi-cart-check"></i> Ventas
+        </a>
+        <a class="nav-link" th:href="@{/web/clientes}">
+            <i class="bi bi-people"></i> Clientes
+        </a>
+        <a class="nav-link active" th:href="@{/web/productos}">
+            <i class="bi bi-box-seam"></i> Productos
+        </a>
+    </nav>
+
+    <div class="nav-section">ACCIONES RÁPIDAS</div>
+
+    <nav class="nav flex-column">
+        <a class="nav-link" th:href="@{/web/productos/nuevo}">
+            <i class="bi bi-box"></i> Nuevo Producto
+        </a>
+    </nav>
+
+    <div class="user-info">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-person-circle"></i>
+            <div>
+                <div class="fw-bold" th:text="${session.usuarioNombre}">Administrador</div>
+                <small class="text-white-50" th:text="${session.usuarioRol}">Admin</small>
+            </div>
+        </div>
+        <a th:href="@{/logout}" class="btn btn-sm btn-outline-light w-100 mt-3">
+            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+        </a>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="navbar-top">
+        <div>
+            <h5 th:text="${titulo} ?: 'Nuevo Producto'">Nuevo Producto</h5>
+            <nav class="breadcrumb">
+                <span class="breadcrumb-item"><a th:href="@{/web/dashboard}" class="text-decoration-none">Inicio</a></span>
+                <span class="breadcrumb-item"><a th:href="@{/web/productos}" class="text-decoration-none">Productos</a></span>
+                <span class="breadcrumb-item active" th:text="${modo == 'editar'} ? 'Editar Producto' : 'Nuevo Producto'">Nuevo Producto</span>
+            </nav>
+        </div>
+        <div>
+            <a th:href="@{/web/productos}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+
+    <div class="content-area">
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="form-card">
+            <h6>
+                <i class="bi bi-box me-2"></i>
+                <span th:text="${modo == 'editar'} ? 'Editar Producto' : 'Registrar Nuevo Producto'">Registrar Nuevo Producto</span>
+            </h6>
+
+            <form th:action="@{${modo == 'editar'} ? '/web/productos/actualizar/' + ${producto.idProducto} : '/web/productos/guardar'}"
+                  th:object="${producto}"
+                  method="post">
+
+                <!-- ID (solo lectura en edición) -->
+                <div class="mb-4" th:if="${modo == 'editar'}">
+                    <label class="form-label">
+                        <i class="bi bi-upc-scan"></i> ID Producto
+                    </label>
+                    <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-hash"></i>
+                            </span>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{idProducto}"
+                               readonly>
+                    </div>
+                </div>
+
+                <!-- Nombre del Producto -->
+                <div class="mb-4">
+                    <label class="form-label">
+                        <i class="bi bi-tag"></i> Nombre del Producto <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-box"></i>
+                            </span>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{nombreProducto}"
+                               placeholder="Ej: Laptop Dell XPS 15"
+                               required>
+                    </div>
+                </div>
+
+                <!-- Descripción -->
+                <div class="mb-4">
+                    <label class="form-label">
+                        <i class="bi bi-file-text"></i> Descripción
+                    </label>
+                    <textarea class="form-control"
+                              th:field="*{descripcion}"
+                              rows="3"
+                              placeholder="Descripción del producto..."></textarea>
+                </div>
+
+                <!-- Precio y Stock en una fila -->
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">
+                            <i class="bi bi-cash"></i> Precio <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">Q</span>
+                            <input type="number"
+                                   class="form-control"
+                                   th:field="*{precio}"
+                                   step="0.01"
+                                   min="0"
+                                   placeholder="0.00"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">
+                            <i class="bi bi-boxes"></i> Stock <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-box"></i>
+                                </span>
+                            <input type="number"
+                                   class="form-control"
+                                   th:field="*{stock}"
+                                   min="0"
+                                   placeholder="0"
+                                   required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estado -->
+                <div class="mb-4">
+                    <label class="form-label">
+                        <i class="bi bi-flag"></i> Estado
+                    </label>
+                    <select class="form-select" th:field="*{estado}">
+                        <option value="1">✅ Activo</option>
+                        <option value="0">❌ Inactivo</option>
+                    </select>
+                </div>
+
+                <!-- Vista previa -->
+                <div class="preview-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <small>Valor del Inventario</small>
+                            <h4 class="mb-0">
+                                Q <span th:text="${producto.precio != null and producto.stock != null ? #numbers.formatDecimal(producto.precio * producto.stock, 1, 2) : '0.00'}">0.00</span>
+                            </h4>
+                        </div>
+                        <i class="bi bi-box-seam fs-1"></i>
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="d-flex gap-2 justify-content-end mt-4">
+                    <a th:href="@{/web/productos}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-success-gradient">
+                        <i class="bi" th:classappend="${modo == 'editar'} ? 'bi-pencil' : 'bi-save'"></i>
+                        <span th:text="${modo == 'editar'} ? 'Actualizar Producto' : 'Guardar Producto'">Guardar Producto</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Actualizar vista previa cuando cambia precio o stock
+    document.addEventListener('DOMContentLoaded', function() {
+        const precioInput = document.querySelector('input[name="precio"]');
+        const stockInput = document.querySelector('input[name="stock"]');
+        const previewSpan = document.querySelector('.preview-card h4 span');
+
+        function actualizarPreview() {
+            const precio = parseFloat
