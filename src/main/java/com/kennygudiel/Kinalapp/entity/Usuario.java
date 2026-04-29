@@ -1,25 +1,29 @@
 package com.kennygudiel.Kinalapp.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity
 @Table(name = "usuarios")
-public class Usuario {
+public class Usuario implements UserDetails {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
     private Integer idUsuario;
 
-    @Column
+    @Column(name = "nombre_usuario")
     private String nombreUsuario;
 
-    @Column
+    @Column(unique = true, nullable = false)
     private String username;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
     @Column
@@ -28,26 +32,46 @@ public class Usuario {
     @Column
     private int estado;
 
+    public Usuario() {}
 
-    public Usuario() {
+    // ========== UserDetails ==========
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + rol.toUpperCase()));
     }
 
-
-    public Usuario(Integer idUsuario,
-                   String nombreUsuario,
-                   String username,
-                   String password,
-                   String rol,
-                   int estado) {
-
-        this.idUsuario = idUsuario;
-        this.nombreUsuario = nombreUsuario;
-        this.username = username;
-        this.password = password;
-        this.rol = rol;
-        this.estado = estado;
+    @Override
+    public String getPassword() {
+        return password;
     }
 
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return estado == 1;
+    }
+
+    // ========== Getters y Setters ==========
 
     public Integer getIdUsuario() {
         return idUsuario;
@@ -57,7 +81,6 @@ public class Usuario {
         this.idUsuario = idUsuario;
     }
 
-
     public String getNombreUsuario() {
         return nombreUsuario;
     }
@@ -66,24 +89,13 @@ public class Usuario {
         this.nombreUsuario = nombreUsuario;
     }
 
-
-    public String getUsername() {
-        return username;
-    }
-
     public void setUsername(String username) {
         this.username = username;
-    }
-
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     public String getRol() {
         return rol;
@@ -93,7 +105,6 @@ public class Usuario {
         this.rol = rol;
     }
 
-
     public int getEstado() {
         return estado;
     }
@@ -101,5 +112,4 @@ public class Usuario {
     public void setEstado(int estado) {
         this.estado = estado;
     }
-
 }
