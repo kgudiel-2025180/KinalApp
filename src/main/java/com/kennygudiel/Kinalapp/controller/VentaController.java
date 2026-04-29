@@ -4,11 +4,12 @@ import com.kennygudiel.Kinalapp.entity.Venta;
 import com.kennygudiel.Kinalapp.service.IVentaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/ventas")
 //Todas las rutas empiezan con /ventas
 public class VentaController {
@@ -129,5 +130,7 @@ public class VentaController {
 
         return ResponseEntity.ok(ventas);
     }
+
+
 
 }
