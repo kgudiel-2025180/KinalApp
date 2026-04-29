@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,12 +28,17 @@
 
         /* Sidebar */
         .sidebar {
-            background: linear-gradient(180deg, var(--primary) 0%, #1a252f 100%);
-            min-height: 100vh;
-            position: fixed;
-            width: 260px;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        }
+    background: linear-gradient(180deg, var(--primary) 0%, #1a252f 100%);
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+
+    /* Arreglo del bug */
+    display: flex;
+    flex-direction: column;
+
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
 
         .sidebar .logo {
             padding: 25px 20px;
@@ -88,15 +93,17 @@
         }
 
         .sidebar .user-info {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            color: white;
-            padding: 15px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-        }
+    /* Antes estaba absolute y causaba el bug */
+    margin-top: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+
+    color: white;
+    padding: 15px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+}
 
         .sidebar .user-info i {
             font-size: 2rem;
@@ -308,12 +315,13 @@
     </nav>
 
     <!-- User Info -->
+    <!-- ✅ CORREGIDO -->
     <div class="user-info">
         <div class="d-flex align-items-center">
             <i class="bi bi-person-circle"></i>
             <div>
-                <div class="fw-bold" th:text="${session.usuarioNombre}">Administrador</div>
-                <small class="text-white-50" th:text="${session.usuarioRol}">Admin</small>
+                <div class="fw-bold" sec:authentication="name">Usuario</div>
+                <small class="text-white-50" sec:authentication="principal.authorities">Rol</small>
             </div>
         </div>
         <a th:href="@{/logout}" class="btn btn-sm btn-outline-light w-100 mt-3">
