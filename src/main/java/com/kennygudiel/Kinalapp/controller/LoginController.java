@@ -13,10 +13,10 @@ public class LoginController {
                             @RequestParam(value = "logout", required = false) String logout,
                             Model model) {
         if (error != null) {
-            model.addAttribute("error", "❌ Usuario o contraseña incorrectos");
+            model.addAttribute("error", " Usuario o contraseña incorrectos");
         }
         if (logout != null) {
-            model.addAttribute("success", "✅ Has cerrado sesión correctamente");
+            model.addAttribute("success", " Has cerrado sesión correctamente");
         }
         return "login";
     }

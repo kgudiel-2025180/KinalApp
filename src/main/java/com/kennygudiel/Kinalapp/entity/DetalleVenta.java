@@ -24,13 +24,13 @@ public class DetalleVenta {
     private int estado;
 
 
-    // 🔹 MANY TO ONE -> VENTA
+    // MANY TO ONE -> VENTA
     @ManyToOne
     @JoinColumn(name = "ventas_codigo_venta")
     private Venta venta;
 
 
-    // 🔹 MANY TO ONE -> PRODUCTO
+    // MANY TO ONE -> PRODUCTO
     @ManyToOne
     @JoinColumn(name = "productos_codigo_producto")
     private Producto producto;

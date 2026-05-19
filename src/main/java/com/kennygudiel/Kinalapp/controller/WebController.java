@@ -30,10 +30,10 @@ public class WebController {
         this.productoService = productoService;
     }
 
-    // ========== DASHBOARD ==========
+    // dashboard
     @GetMapping("/dashboard")
     public String paginaDashboard(HttpSession session, Model model) {
-        // Spring Security ya maneja la autenticación
+        // Spring Security  maneja la autenticación
         model.addAttribute("totalVentas", ventaService.listarVentas().size());
         model.addAttribute("totalClientes", clienteService.listarClientes().size());
         model.addAttribute("totalProductos", productoService.listarProductos().size());
@@ -41,7 +41,7 @@ public class WebController {
         return "index";
     }
 
-    // ========== VENTAS ==========
+    // ventas
     @GetMapping("/ventas")
     public String paginaVentas(HttpSession session, Model model) {
         List<Venta> ventas = ventaService.listarVentas();
@@ -68,9 +68,9 @@ public class WebController {
             clienteService.buscarPorDPI(dpiCliente).ifPresent(venta::setCliente);
             venta.setEstado(1);
             ventaService.guardar(venta);
-            ra.addFlashAttribute("success", "✅ Venta registrada exitosamente!");
+            ra.addFlashAttribute("success", " Venta registrada exitosamente!");
         } catch (Exception e) {
-            ra.addFlashAttribute("error", "❌ Error: " + e.getMessage());
+            ra.addFlashAttribute("error", " Error: " + e.getMessage());
         }
         return "redirect:/web/ventas";
     }
@@ -79,9 +79,9 @@ public class WebController {
     public String procesarEliminarVenta(@PathVariable Integer id, RedirectAttributes ra) {
         try {
             ventaService.eliminar(id);
-            ra.addFlashAttribute("success", "✅ Venta eliminada!");
+            ra.addFlashAttribute("success", " Venta eliminada!");
         } catch (Exception e) {
-            ra.addFlashAttribute("error", "❌ Error: " + e.getMessage());
+            ra.addFlashAttribute("error", " Error: " + e.getMessage());
         }
         return "redirect:/web/ventas";
     }
@@ -111,9 +111,9 @@ public class WebController {
         try {
             clienteService.buscarPorDPI(dpiCliente).ifPresent(venta::setCliente);
             ventaService.actualizar(id, venta);
-            ra.addFlashAttribute("success", "✅ Venta #" + id + " actualizada!");
+            ra.addFlashAttribute("success", " Venta #" + id + " actualizada!");
         } catch (Exception e) {
-            ra.addFlashAttribute("error", "❌ Error: " + e.getMessage());
+            ra.addFlashAttribute("error", " Error: " + e.getMessage());
         }
         return "redirect:/web/ventas";
     }
@@ -158,7 +158,7 @@ public class WebController {
                 });
     }
 
-    // ========== CLIENTES ==========
+    // clientes
     @GetMapping("/clientes")
     public String paginaClientes(HttpSession session, Model model) {
 
@@ -180,9 +180,9 @@ public class WebController {
         try {
             cliente.setEstado(1);
             clienteService.guardar(cliente);
-            ra.addFlashAttribute("success", "✅ Cliente registrado!");
+            ra.addFlashAttribute("success", " Cliente registrado!");
         } catch (Exception e) {
-            ra.addFlashAttribute("error", "❌ Error: " + e.getMessage());
+            ra.addFlashAttribute("error", " Error: " + e.getMessage());
         }
         return "redirect:/web/clientes";
     }
@@ -209,9 +209,9 @@ public class WebController {
                                             RedirectAttributes ra) {
         try {
             clienteService.actualizar(dpi, cliente);
-            ra.addFlashAttribute("success", "✅ Cliente actualizado!");
+            ra.addFlashAttribute("success", " Cliente actualizado!");
         } catch (Exception e) {
-            ra.addFlashAttribute("error", "❌ Error: " + e.getMessage());
+            ra.addFlashAttribute("error", " Error: " + e.getMessage());
         }
         return "redirect:/web/clientes";
     }
@@ -220,9 +220,9 @@ public class WebController {
     public String procesarEliminarCliente(@PathVariable String dpi, RedirectAttributes ra) {
         try {
             clienteService.eliminar(dpi);
-            ra.addFlashAttribute("success", "✅ Cliente eliminado!");
+            ra.addFlashAttribute("success", " Cliente eliminado!");
         } catch (Exception e) {
-            ra.addFlashAttribute("error", "❌ No se puede eliminar: el cliente tiene ventas registradas. Elimine primero las ventas.");
+            ra.addFlashAttribute("error", " No se puede eliminar: el cliente tiene ventas registradas. Elimine primero las ventas.");
         }
         return "redirect:/web/clientes";
     }
@@ -249,9 +249,9 @@ public class WebController {
         try {
             producto.setEstado(1);
             productoService.guardar(producto);
-            ra.addFlashAttribute("success", "✅ Producto registrado!");
+            ra.addFlashAttribute("success", " Producto registrado!");
         } catch (Exception e) {
-            ra.addFlashAttribute("error", "❌ Error: " + e.getMessage());
+            ra.addFlashAttribute("error", " Error: " + e.getMessage());
         }
         return "redirect:/web/productos";
     }
@@ -278,9 +278,9 @@ public class WebController {
                                              RedirectAttributes ra) {
         try {
             productoService.actualizar(id, producto);
-            ra.addFlashAttribute("success", "✅ Producto #" + id + " actualizado!");
+            ra.addFlashAttribute("success", " Producto #" + id + " actualizado!");
         } catch (Exception e) {
-            ra.addFlashAttribute("error", "❌ Error: " + e.getMessage());
+            ra.addFlashAttribute("error", " Error: " + e.getMessage());
         }
         return "redirect:/web/productos";
     }
@@ -289,9 +289,9 @@ public class WebController {
     public String procesarEliminarProducto(@PathVariable Integer id, RedirectAttributes ra) {
         try {
             productoService.eliminar(id);
-            ra.addFlashAttribute("success", "✅ Producto eliminado!");
+            ra.addFlashAttribute("success", " Producto eliminado!");
         } catch (Exception e) {
-            ra.addFlashAttribute("error", "❌ Error: " + e.getMessage());
+            ra.addFlashAttribute("error", " Error: " + e.getMessage());
         }
         return "redirect:/web/productos";
     }
