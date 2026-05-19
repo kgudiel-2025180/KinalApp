@@ -7,9 +7,9 @@ import jakarta.persistence.*;
 public class Producto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // ✅ AGREGAR ESTO
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_producto")
-    private Integer idProducto;  // ✅ Cambiar a Integer (puede ser null para nuevo)
+    private Integer idProducto;
 
     @Column(name = "nombre_producto")
     private String nombreProducto;
@@ -18,13 +18,13 @@ public class Producto {
     private String descripcion;
 
     @Column
-    private Double precio;  // ✅ Cambiar a Double
+    private Double precio;
 
     @Column
-    private Integer stock;  // ✅ Cambiar a Integer
+    private Integer stock;
 
     @Column
-    private Integer estado;  // ✅ Cambiar a Integer
+    private Integer estado;
 
     public Producto() {
     }

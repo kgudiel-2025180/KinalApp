@@ -65,7 +65,7 @@ public class VentaService implements IVentaService {
         return ventaRepository.findByEstado(estado);
     }
 
-    // ✅ VALIDACIONES CORREGIDAS
+    // VALIDACIONES CORREGIDAS
     private void validarVenta(Venta venta) {
 
         if (venta.getFechaVenta() == null ||
@@ -77,7 +77,7 @@ public class VentaService implements IVentaService {
             throw new IllegalArgumentException("El total no puede ser negativo");
         }
 
-        // ✅ Validar que el cliente existe
+        // Validar que el cliente existe
         if (venta.getCliente() == null) {
             throw new IllegalArgumentException("El cliente es obligatorio");
         }

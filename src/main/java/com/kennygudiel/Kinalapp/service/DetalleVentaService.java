@@ -96,7 +96,7 @@ public class DetalleVentaService implements IDetalleVentaService {
 
 
 
-    // ✅ VALIDACIONES CORREGIDAS
+    // VALIDACIONES CORREGIDAS
 
     private void validarDetalle(DetalleVenta detalleVenta) {
 
