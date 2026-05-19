@@ -21,13 +21,13 @@ public class Venta {
     private int estado;
 
 
-    // 🔹 MANY TO ONE -> CLIENTE
+    // MANY TO ONE -> CLIENTE
     @ManyToOne
     @JoinColumn(name = "clientes_dpi_cliente")
     private Cliente cliente;
 
 
-    // 🔹 MANY TO ONE -> USUARIO
+    // MANY TO ONE -> USUARIO
     @ManyToOne
     @JoinColumn(name = "usuarios_codigo_usuario")
     private Usuario usuario;
